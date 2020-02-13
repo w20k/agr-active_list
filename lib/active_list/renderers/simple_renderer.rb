@@ -206,7 +206,8 @@ module ActiveList
                 column.options[:url][:action] ||= :show
                 default_controller = column.class_name.is_a?(CodeString) ? column.class_name : column.class_name.tableize.to_sym
                 column.options[:url][:controller] ||= default_controller
-                url = column.options[:url].collect { |k, v| "#{k}: " + urlify(v, record) }.join(', ')
+                namespace = column.options[:url].delete(:namespace)
+                url = column.options[:url].collect { |k, v| "#{k}: " + urlify(k, v, record, namespace) }.join(', ')
                 value_code = "(#{value_code}.blank? ? '' : link_to(#{value_code}.to_s, #{url}))"
               elsif column.options[:mode] || column.label_method == :email
                 value_code = "(#{value_code}.blank? ? '' : mail_to(#{value_code}))"
