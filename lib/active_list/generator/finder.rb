@@ -10,8 +10,8 @@ module ActiveList
         @table.options[:order] = (columns.any? ? columns.first.name.to_sym : { id: :desc })
       end
 
-      class_name = "options[:constant_name] || #{@table.model.name}"
-      class_name = "(controller_name != '#{class_name.tableize}' && !options[:constant_name] ? controller_name.to_s.classify.constantize : #{class_name})" if collection?
+      class_name = "options[\"constant_name\"]&.constantize || #{@table.model.name}"
+      class_name = "(controller_name != '#{class_name.tableize}' && !options[\"constant_name\"] ? controller_name.to_s.classify.constantize : #{class_name})" if collection?
 
       # Find data
       query_code = class_name.to_s
