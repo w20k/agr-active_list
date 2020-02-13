@@ -144,7 +144,7 @@ module ActiveList
       else
         code << "#{@table.model.table_name}.*"
       end
-      ("'" + code + "'").c
+      ('"' + code + '"').c
     end
 
     def sanitize_condition(value)
