@@ -168,14 +168,15 @@ module ActiveList
           if column.is_a? ActiveList::Definition::EmptyColumn
             value_code = 'nil'
           elsif column.is_a? ActiveList::Definition::StatusColumn
-
             value_code = column.datum_code(record, children_mode)
+            title_code = column.tooltip_title_code(record, children_mode)
             levels = %w[go caution stop]
             lights = levels.collect do |light|
               "content_tag(:span, '', :class => #{light.inspect})"
             end.join(' + ')
             # Expected value are :valid, :warning, :error
-            value_code = "content_tag(:span, #{lights}, :class => 'lights lights-' + (#{levels.inspect}.include?(#{value_code}.to_s) ? #{value_code}.to_s : 'undefined'))"
+
+            value_code = "content_tag(:span, #{lights}, :class => 'lights lights-' + (#{levels.inspect}.include?(#{value_code}.to_s) ? #{value_code}.to_s : 'undefined'), data: { toggle: :tooltip, placement: :top }, title: #{title_code})"
 
           elsif column.is_a? ActiveList::Definition::DataColumn
             if column.options[:children].is_a?(FalseClass) && children_mode
