@@ -165,9 +165,11 @@ module ActiveList
         children_mode = !!(nature == :children)
         for column in table.columns
           value_code = ''
+          title_value_code = ''
           if column.is_a? ActiveList::Definition::EmptyColumn
             value_code = 'nil'
           elsif column.is_a? ActiveList::Definition::StatusColumn
+            title_value_code = nil
             value_code = column.datum_code(record, children_mode)
             title_code = column.tooltip_title_code(record, children_mode)
             levels = %w[go caution stop]
@@ -184,6 +186,7 @@ module ActiveList
             else
               value_code = column.datum_code(record, children_mode)
               if column.datatype == :boolean
+                title_value_code = value_code
                 value_code = "content_tag(:div, '', :class => 'checkbox-'+(" + value_code.to_s + " ? 'true' : 'false'))"
               elsif %i[date datetime timestamp measure].include? column.datatype
                 value_code = "(#{value_code}.nil? ? '' : #{value_code}.l)"
@@ -209,12 +212,17 @@ module ActiveList
                 column.options[:url][:controller] ||= default_controller
                 namespace = column.options[:url].delete(:namespace)
                 url = column.options[:url].collect { |k, v| "#{k}: " + urlify(k, v, record, namespace) }.join(', ')
+
+                title_value_code = value_code
                 value_code = "(#{value_code}.blank? ? '' : link_to(#{value_code}.to_s, #{url}))"
               elsif column.options[:mode] || column.label_method == :email
+                title_value_code = value_code
                 value_code = "(#{value_code}.blank? ? '' : mail_to(#{value_code}))"
               elsif column.options[:mode] || column.label_method == :website
+                title_value_code = value_code
                 value_code = "(#{value_code}.blank? ? '' : link_to(" + value_code + ', ' + value_code + '))'
               elsif column.label_method == :color
+                title_value_code = value_code
                 value_code = "content_tag(:div, #{column.datum_code(record)}, style: 'background: #'+" + column.datum_code(record) + ')'
               elsif column.label_method.to_s.match(/(^|\_)currency$/) && column.datatype == :string
                 value_code = "(Nomen::Currency[#{value_code}] ? Nomen::Currency[#{value_code}].human_name : #{value_code})"
@@ -229,6 +237,7 @@ module ActiveList
               value_code = "if #{record}\n#{value_code.dig}end" if column.is_a?(ActiveList::Definition::AssociationColumn)
             end
           elsif column.is_a?(ActiveList::Definition::CheckBoxColumn)
+            title_value_code = nil
             if nature == :body
               form_name = column.form_name || "'#{table.name}[' + #{record}.id.to_s + '][#{column.name}]'".c
               value = 'nil'
@@ -243,15 +252,26 @@ module ActiveList
               value_code << 'nil'
             end
           elsif column.is_a?(ActiveList::Definition::TextFieldColumn)
+            title_value_code = nil
             form_name = column.form_name || "'#{table.name}[' + #{record}.id.to_s + '][#{column.name}]'".c
             value_code = (nature == :body ? "text_field_tag(#{form_name.inspect}, #{recordify!(column.options[:value] || column.name, record)}#{column.options[:size] ? ', size: ' + column.options[:size].to_s : ''})" : 'nil') # , id: '#{table.name}_'+#{record}.id.to_s + '_#{column.name}'
           elsif column.is_a?(ActiveList::Definition::ActionColumn)
+            title_value_code = nil
             next unless column.use_single?
             value_code = (nature == :body ? column.operation(record) : 'nil')
           else
             value_code = "'&#160;&#8709;&#160;'.html_safe"
           end
-          code << "content_tag(:td, :class => \"#{column_classes(column)}\","
+
+          title_attr_code = if title_value_code.nil?
+                              ''
+                            elsif title_value_code.blank?
+                              ":title => (#{value_code}),"
+                            else
+                              ":title => (#{title_value_code}),"
+                            end
+
+          code << "content_tag(:td, #{title_attr_code} :class => \"#{column_classes(column)}\","
           code << " data: { 'list-column-header' => '#{column.short_id}'"
           code << ", 'list-cell-value' => \"\#{#{column.datum_value(record, children_mode)}.to_f}\"" if column.computable?
           code << " } ) do\n"
