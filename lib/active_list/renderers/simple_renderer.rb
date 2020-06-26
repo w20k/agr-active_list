@@ -232,6 +232,7 @@ module ActiveList
                 value_code = "(Nomen::Country[#{value_code}]  ? (image_tag('countries/' + #{value_code}.to_s + '.png') + ' ' + Nomen::Country[#{value_code}].human_name).html_safe : #{value_code})"
               else # if column.datatype == :string
                 value_code = "h(#{value_code}.to_s)"
+                title_value_code = nil
               end
 
               value_code = "if #{record}\n#{value_code.dig}end" if column.is_a?(ActiveList::Definition::AssociationColumn)
