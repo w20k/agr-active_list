@@ -53,7 +53,12 @@ module ActiveList
         code << "if #{var_name(:count)} > 0\n"
         code << "  #{generator.records_variable_name}.each do |#{record}|\n"
         code << "    #{var_name(:attrs)} = {id: 'r' + #{record}.id.to_s}\n"
-        code << "    #{var_name(:attrs)}['data-' + options[:data].gsub('_', '-')] = #{record}.send(options[:data]) if options[:data]\n"
+        code << " if options[:data].present?\n"
+        code << "   options[:data] = [options[:data]] unless options[:data].is_a?(Array)\n"
+        code << "   options[:data].each do |attr|\n"
+        code << "     #{var_name(:attrs)}['data-' + attr.gsub('_', '-')] = #{record}.send(attr)\n"
+        code << "   end\n"
+        code << " end\n"
         if table.options[:line_class]
           code << "    #{var_name(:attrs)}[:class] = (#{recordify!(table.options[:line_class], record)}).to_s\n"
           code << "    #{var_name(:attrs)}[:class] << ' focus' if __params['#{table.name}-id'].to_i == #{record}.id\n"
