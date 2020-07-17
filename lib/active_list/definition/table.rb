@@ -103,6 +103,10 @@ module ActiveList
         add :action, name, options
       end
 
+      # Add a new method in Table which permit to define empty columns
+      def empty(name, options = {})
+        add :empty, name, options
+      end
       # # Add a new method in Table which permit to define data columns
       # def attribute(name, options = {})
       #   add :attribute, name, options
