@@ -452,7 +452,11 @@ module ActiveList
         classes = []
         conds = []
         conds << [:sor, "#{var_name(:params)}[:sort] == '#{column.sort_id}'".c] if column.sortable?
-        conds << [:hidden, "#{var_name(:params)}[:hidden_columns].include?(:#{column.name})".c] if column.is_a? ActiveList::Definition::DataColumn
+        if column.is_a? ActiveList::Definition::DataColumn
+          conds << [:hidden, "#{var_name(:params)}[:hidden_columns].include?(:#{column.name})".c]
+        elsif column.condition
+          conds << [:hidden, "h(#{column.condition}) == 'false'".c]
+        end
         classes << column.options[:class].to_s.strip unless column.options[:class].blank?
         classes << column.short_id unless without_id
         if column.is_a? ActiveList::Definition::ActionColumn
