@@ -1,6 +1,4 @@
-lib = File.expand_path('../lib', __FILE__)
-$LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'active_list/version'
+require_relative 'lib/active_list/version'
 
 Gem::Specification.new do |spec|
   spec.name          = 'active_list'
@@ -18,10 +16,12 @@ Gem::Specification.new do |spec|
   spec.require_paths = ['lib']
   spec.required_ruby_version = '>= 1.9.3'
 
-  spec.add_dependency 'rails', ['>= 3.2', '< 6']
   spec.add_dependency 'arel', ['>= 5.0.0']
   spec.add_dependency 'code_string', ['>= 0.0.1']
-  spec.add_dependency 'rubyzip', ['>= 1.0']
   spec.add_dependency 'i18n-complements', ['>= 0']
+  spec.add_dependency 'onoma', '~> 0.4'
+  spec.add_dependency 'rails', ['>= 3.2', '< 6']
+  spec.add_dependency 'rubyzip', ['>= 1.0']
+
   spec.add_development_dependency('sqlite3', ['~> 1.3.6'])
 end

@@ -230,11 +230,11 @@ module ActiveList
                 title_value_code = value_code
                 value_code = "content_tag(:div, #{column.datum_code(record)}, style: 'background: #'+" + column.datum_code(record) + ')'
               elsif column.label_method.to_s.match(/(^|\_)currency$/) && column.datatype == :string
-                value_code = "(Nomen::Currency[#{value_code}] ? Nomen::Currency[#{value_code}].human_name : #{value_code})"
+                value_code = "(Onoma::Currency[#{value_code}] ? Onoma::Currency[#{value_code}].human_name : #{value_code})"
               elsif column.label_method.to_s.match(/(^|\_)language$/) && column.datatype == :string
-                value_code = "(Nomen::Language[#{value_code}]  ? Nomen::Language[#{value_code}].human_name : #{value_code})"
+                value_code = "(Onoma::Language[#{value_code}]  ? Onoma::Language[#{value_code}].human_name : #{value_code})"
               elsif column.label_method.to_s.match(/(^|\_)country$/) && column.datatype == :string
-                value_code = "(Nomen::Country[#{value_code}]  ? (image_tag('countries/' + #{value_code}.to_s + '.png') + ' ' + Nomen::Country[#{value_code}].human_name).html_safe : #{value_code})"
+                value_code = "(Onoma::Country[#{value_code}]  ? (image_tag('countries/' + #{value_code}.to_s + '.png') + ' ' + Onoma::Country[#{value_code}].human_name).html_safe : #{value_code})"
               else # if column.datatype == :string
                 value_code = "h(#{value_code}.to_s)"
                 title_value_code = nil
@@ -350,8 +350,8 @@ module ActiveList
             unit = "''"
             precision = "''"
             if column.options[:currency]
-              unit = "Nomen::Currency.find(#{column.currency_for(generator.records_variable_name + '.first').inspect} || 'EUR').symbol.to_s"
-              precision = "Nomen::Currency.find(#{column.currency_for(generator.records_variable_name + '.first').inspect} || 'EUR').precision.to_s"
+              unit = "Onoma::Currency.find(#{column.currency_for(generator.records_variable_name + '.first').inspect} || 'EUR').symbol.to_s"
+              precision = "Onoma::Currency.find(#{column.currency_for(generator.records_variable_name + '.first').inspect} || 'EUR').precision.to_s"
             elsif column.computable?
               unit = "#{generator.records_variable_name}.first.#{column.value_method}.symbol"
               precision = "'2'"

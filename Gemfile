@@ -1,6 +1,8 @@
 source 'https://rubygems.org'
 
-# Specify your gem's dependencies in active-list.gemspec
+git_source(:gitlab) { |repo_name| "https://gitlab.com/#{repo_name}.git" }
+
 gemspec
 
 gem 'sprockets', '< 4'
+gem 'onoma', gitlab: 'ekylibre/onoma'
