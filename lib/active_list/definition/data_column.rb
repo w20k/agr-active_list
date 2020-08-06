@@ -22,11 +22,11 @@ module ActiveList
           currency = currency_for(record)
           datum = "(#{datum}.nil? ? '' : #{datum}.l(#{'currency: ' + currency.inspect if currency}))"
         elsif @name.to_s.match(/(^|\_)currency$/) && datatype == :string
-          datum = "(Nomen::Currency[#{datum}] ? Nomen::Currency[#{datum}].human_name : '')"
+          datum = "(Onoma::Currency[#{datum}] ? Onoma::Currency[#{datum}].human_name : '')"
         elsif @name.to_s.match(/(^|\_)country$/) && datatype == :string
-          datum = "(Nomen::Country[#{datum}] ? Nomen::Country[#{datum}].human_name : '')"
+          datum = "(Onoma::Country[#{datum}] ? Onoma::Country[#{datum}].human_name : '')"
         elsif @name.to_s.match(/(^|\_)language$/) && datatype == :string
-          datum = "(Nomen::Language[#{datum}] ? Nomen::Language[#{datum}].human_name : '')"
+          datum = "(Onoma::Language[#{datum}] ? Onoma::Language[#{datum}].human_name : '')"
         elsif enumerize?
           datum = "(#{datum}.nil? ? '' : #{datum}.text)"
         end
