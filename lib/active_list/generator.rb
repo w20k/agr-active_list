@@ -1,6 +1,6 @@
 module ActiveList
   class Generator
-    attr_accessor :table, :controller, :controller_method_name, :view_method_name, :records_variable_name
+    attr_accessor :table, :controller, :controller_method_name, :view_method_name, :records_variable_name, :export_class
 
     def initialize(*args, &_block)
       options = args.extract_options!
@@ -12,6 +12,7 @@ module ActiveList
       @view_method_name       = "_#{@controller.controller_name}_list_#{name}_tag"
       @records_variable_name  = "@#{name}"
       @table = ActiveList::Definition::Table.new(name, model, options)
+      @export_class = options[:export_class]
       if block_given?
         yield @table
       else
@@ -47,7 +48,7 @@ module ActiveList
       code << "    end\n"
       for format, exporter in ActiveList::Exporters.hash
         code << "    format.#{format} do\n"
-        code << exporter.new(self).send_data_code.dig(3)
+        code << exporter.new(self).generate_file_code(format).dig(3)
         code << "    end\n"
       end
       code << "  end\n"
