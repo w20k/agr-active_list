@@ -261,6 +261,9 @@ module ActiveList
             title_value_code = nil
             form_name = column.form_name || "'#{table.name}[' + #{record}.id.to_s + '][#{column.name}]'".c
             value_code = (nature == :body ? "text_field_tag(#{form_name.inspect}, #{recordify!(column.options[:value] || column.name, record)}#{column.options[:size] ? ', size: ' + column.options[:size].to_s : ''})" : 'nil') # , id: '#{table.name}_'+#{record}.id.to_s + '_#{column.name}'
+          elsif column.is_a?(ActiveList::Definition::IconColumn)
+            title_value_code = nil
+            value_code = column.icon_code(record)
           elsif column.is_a?(ActiveList::Definition::ActionColumn)
             title_value_code = nil
             next unless column.use_single?
@@ -479,6 +482,9 @@ module ActiveList
           classes << :tfd
         elsif column.is_a? ActiveList::Definition::CheckBoxColumn
           classes << :chk
+        elsif column.is_a? ActiveList::Definition::IconColumn
+          classes << :act
+          classes << "icon-#{column.name}"
         else
           classes << :unk
         end
