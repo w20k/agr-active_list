@@ -76,7 +76,7 @@ module ActiveList
 
       def columns_to_hash
         table.exportable_columns.map do |column|
-          [column.header_code, column.exporting_datum_code('record').to_s]
+          [column.header_code, column.exporting_datum_code('record', true).to_s]
         end.to_h
       end
     end
