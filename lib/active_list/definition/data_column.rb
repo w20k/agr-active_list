@@ -20,7 +20,7 @@ module ActiveList
           datum = "(#{datum}.nil? ? '' : #{datum}.l)"
         elsif datatype == :decimal && !noview
           currency = currency_for(record)
-          datum = "(#{datum}.nil? ? '' : #{datum}.l(#{'currency: ' + currency.inspect if currency}))"
+          datum = "(#{datum}.nil? ? '' : #{datum}.l)" unless currency
         elsif @name.to_s.match(/(^|\_)currency$/) && datatype == :string
           datum = "(Onoma::Currency[#{datum}] ? Onoma::Currency[#{datum}].human_name : '')"
         elsif @name.to_s.match(/(^|\_)country$/) && datatype == :string
@@ -30,7 +30,7 @@ module ActiveList
         elsif enumerize?
           datum = "(#{datum}.nil? ? '' : #{datum}.text)"
         end
-        datum
+        datum.c
       end
 
       # Returns the data type of the column if the column is in the database
