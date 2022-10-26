@@ -31,7 +31,7 @@ module ActiveList
           code << "                                        format: '#{format}',\n"
           code << "                                        file_extension: '#{file_extension}')\n"
           code << "notify_success(:document_in_preparation)\n"
-          code << "redirect_to(:back)\n"
+          code << "redirect_back(fallback_location: root_path)\n"
         else
           code << generate_data_code
           code << send_data_code
