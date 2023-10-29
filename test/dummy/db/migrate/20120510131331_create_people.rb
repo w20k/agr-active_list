@@ -7,7 +7,7 @@ class CreatePeople < ActiveRecord::Migration[4.2]
       t.decimal :balance_amount
       t.string  :currency
 
-      t.timestamps null: false
+      t.timestamps(null: false)
     end
   end
 end

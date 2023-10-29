@@ -13,7 +13,7 @@ ENV['BUNDLE_GEMFILE'] = ''
 
 # CURRENT FILE :: test/test_helper.rb
 # Configure Rails Environment
-ENV['RAILS_ENV'] = 'test'
+ENV['RAILS_ENV'] = 'development'
 ENV['RAILS_ROOT'] = dummy_path.to_s
 
 require dummy_path.join('config', 'environment.rb')

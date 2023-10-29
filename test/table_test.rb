@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class TableTest < ActiveSupport::TestCase
+class TableT  est < ActiveSupport::TestCase
   # include AppMockHelper
   # mock_app
 
